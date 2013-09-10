@@ -33,9 +33,7 @@ object ScaldingBuild extends Build {
     ),
 
     resolvers ++= Seq(
-      "snapshots" at "http://oss.sonatype.org/content/repositories/snapshots",
-      "releases"  at "http://oss.sonatype.org/content/repositories/releases",
-      "Concurrent Maven Repo" at "http://conjars.org/repo"
+      "proxy" at "http://maven.int.s-cloud.net/content/groups/proxy"
     ),
 
     parallelExecution in Test := false,
@@ -53,12 +51,12 @@ object ScaldingBuild extends Build {
 
     pomIncludeRepository := { x => false },
 
-    publishTo <<= version { (v: String) =>
-      val nexus = "https://oss.sonatype.org/"
+    publishTo <<= version { v =>
+      val nexus = "http://maven.int.s-cloud.net/content/repositories/thirdparty_"
       if (v.trim.endsWith("SNAPSHOT"))
-        Some("sonatype-snapshots" at nexus + "content/repositories/snapshots")
+        Some("snapshots" at nexus + "snapshots")
       else
-        Some("sonatype-releases" at nexus + "service/local/staging/deploy/maven2")
+        Some("releases" at nexus + "releases")
     },
 
     // Janino includes a broken signature, and is not needed:
@@ -140,7 +138,7 @@ object ScaldingBuild extends Build {
     libraryDependencies += "com.joestelmach" % "natty" % "0.7"
   )
 
-  lazy val cascadingVersion = System.getenv.asScala.getOrElse("SCALDING_CASCADING_VERSION", "2.1.6")
+  lazy val cascadingVersion = "2.0.1-cdh4.1.0"
 
   lazy val scaldingCore = Project(
     id = "scalding-core",
@@ -150,6 +148,7 @@ object ScaldingBuild extends Build {
     name := "scalding-core",
     previousArtifact := Some("com.twitter" % "scalding-core_2.9.2" % "0.8.5"),
     libraryDependencies ++= Seq(
+      "commons-daemon" % "commons-daemon" % "1.0.5",
       "cascading" % "cascading-core" % cascadingVersion,
       "cascading" % "cascading-local" % cascadingVersion,
       "cascading" % "cascading-hadoop" % cascadingVersion,
@@ -159,7 +158,6 @@ object ScaldingBuild extends Build {
       withCross("com.twitter" %% "algebird-core" % "0.1.13"),
       "commons-lang" % "commons-lang" % "2.4",
       withCross("com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.1.3"),
-      "org.apache.hadoop" % "hadoop-core" % "0.20.2" % "provided",
       "org.slf4j" % "slf4j-api" % "1.6.6",
       "org.slf4j" % "slf4j-log4j12" % "1.6.6" % "provided"
     )
