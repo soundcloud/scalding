@@ -66,6 +66,7 @@ object ScaldingBuild extends Build {
       "org.slf4j" % "slf4j-log4j12" % slf4jVersion % "test"
     ),
 
+    // add interal SoundCloud repo to pull in cascading-core:2.6.1-sc-patched
     resolvers ++= Seq(
       "Local Maven Repository" at "file://" + Path.userHome.absolutePath + "/.m2/repository",
       "snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
@@ -243,8 +244,9 @@ object ScaldingBuild extends Build {
 
   lazy val scaldingDate = module("date")
 
-  lazy val cascadingVersion =
-    System.getenv.asScala.getOrElse("SCALDING_CASCADING_VERSION", "2.6.1")
+  // contains a fix that handles NPEs in HadoopFlowStepJob.dumpDebugInfo()
+  lazy val cascadingVersion = "2.6.1-sc-patched"
+    //System.getenv.asScala.getOrElse("SCALDING_CASCADING_VERSION", "2.6.1")
 
   lazy val cascadingJDBCVersion =
     System.getenv.asScala.getOrElse("SCALDING_CASCADING_JDBC_VERSION", "2.6.0")
@@ -482,3 +484,4 @@ object ScaldingBuild extends Build {
     }
   ).dependsOn(scaldingCore)
 }
+
