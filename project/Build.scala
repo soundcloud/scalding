@@ -297,7 +297,7 @@ object ScaldingBuild extends Build {
   lazy val scaldingCore = module("core").settings(
     libraryDependencies <++= (scalaVersion) { scalaVersion => Seq(
       "cascading" % "cascading-core" % cascadingVersion,
-      "cascading" % "cascading-hadoop" % cascadingVersion,
+      "cascading" % "cascading-hadoop2-mr1" % cascadingVersion,
       "cascading" % "cascading-local" % cascadingVersion,
       "com.twitter" % "chill-hadoop" % chillVersion,
       "com.twitter" % "chill-java" % chillVersion,
@@ -532,7 +532,7 @@ object ScaldingBuild extends Build {
     libraryDependencies <++= (scalaVersion) { scalaVersion => Seq(
       "org.apache.hadoop" % "hadoop-client" % hadoopVersion % "provided",
       "org.apache.hbase" % "hbase" % hbaseVersion % "provided",
-      "cascading" % "cascading-hadoop" % cascadingVersion
+      "cascading" % "cascading-hadoop2-mr1" % cascadingVersion
     )
     }
   )
@@ -549,7 +549,7 @@ object ScaldingBuild extends Build {
       "org.apache.hadoop" % "hadoop-client" % hadoopVersion,
       "org.slf4j" % "slf4j-api" % slf4jVersion,
       "org.slf4j" % "slf4j-log4j12" % slf4jVersion,
-      "cascading" % "cascading-hadoop" % cascadingVersion
+      "cascading" % "cascading-hadoop2-mr1" % cascadingVersion
     )
     }
   ).dependsOn(scaldingCore)
